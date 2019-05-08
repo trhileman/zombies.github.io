@@ -1,0 +1,93 @@
+https://projects.raspberrypi.org/en/projects/wheres-zombie/5
+<html>
+  <head>
+    <title>Zombie apocalypse survival map</title>
+	<style>
+	#zombie_map {
+		width: 600px;
+		height: 400px;
+		background-color: grey;
+	}
+</style>
+  </head>
+  <body>
+	My zombie map
+	<div id="zombie_map"></div>
+	<form>
+		Select an emoji
+		<select id="icon_to_use">
+			<option value="zombie.png">Zombie</option>
+			<option value="weapons.png">Weapons</option>
+			<option value="hospital.png">Hospital</option>
+		</select>
+</form>
+	<script>
+		var zombie_map;
+		var all_markers = []
+		var data = "41.051780 -76.251940 hospital.png,40.96265629837798 -75.97316192382812 zombie.png,40.975099399757234 -76.11735748046874 zombie.png,40.95435959387662 -76.24644683593749 zombie.png,40.974062564266454 -76.36042999023437 zombie.png,41.06731248455786 -76.42360137695312 zombie.png,41.154226602475504 -76.27493858393944 zombie.png,41.15009044414132 -76.20764732417382 zombie.png,41.103540682928895 -76.07169151362694 zombie.png,40.96887814238054 -76.4644527440957 zombie.png,41.086981699094295 -76.5303707128457 zombie.png,40.89313919593272 -76.26807212886132 zombie.png,41.15215855592759 -76.43561363276757 weapons.png,41.0310643150161 -76.56744957026757 weapons.png,41.01137837507111 -76.41089439448632 weapons.png,40.943987246795636 -76.39716148433007 weapons.png,40.99583268737217 -76.30103111323632 weapons.png,40.891062934478164 -76.15271568354882 weapons.png,41.00930582858657 -75.99890708979882 weapons.png,41.089051800343995 -76.12799644526757 weapons.png,41.186272981135275 -76.08679771479882 weapons.png,41.21003919684126 -76.22687339839257 weapons.png,41.116991783660126 -76.31888389643944 weapons.png,40.928425671234415 -76.49603843745507 hospital.png,40.92635051752462 -76.21314048823632 hospital.png,41.02174012956634 -76.21314048823632 hospital.png,41.024848338080446 -76.04559898433007 hospital.png,41.142851539146164 -76.02225303706444 hospital.png,41.12630246979586 -76.23785972651757 hospital.png,41.124233542583504 -76.41776084956444 hospital.png,41.00930582858657 -76.49329185542382 hospital.png,41.12526801434344 -76.50702476558007 hospital.png,40.92531291623209 -75.96182823237694 hospital.png,40.89625346594683 -76.07581138667382 hospital.png";
+		var markers = data.split(",");
+		function initMap() {
+			function set_my_position(position){
+				var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+				var marker = new google.maps.Marker({
+					position: pos,
+					map: zombie_map,
+					icon: player.png
+				});
+			}
+
+			zombie_map = new google.maps.Map(document.getElementById('zombie_map'), {
+				zoom: 10,
+				center: {lat: 41.051780, lng: -76.251940}
+			});
+			
+			if(navigator.geolocation) {
+				navigator.geolocation.watchPosition(set_my_position);
+			}
+			else {
+				alert("Geolocation doesn't work in your browser");
+			}
+			
+			for(var i=0; i < markers.length; i++){
+				var marker_data = markers[i].trim();
+				marker_data = marker_data.split(" ");
+				var latitude = marker_data[0];
+				var longitude = marker_data[1];
+				var emoji = marker_data[2];
+				var marker_position = new google.maps.LatLng(latitude, longitude);
+				var marker = new google.maps.Marker({
+					position: marker_position,
+					map: zombie_map,
+					icon: emoji
+				});
+				all_markers.push(marker);
+			}
+			
+			//var marker = new google.maps.Marker({
+				//position: {lat: 41.051780, lng: -76.251940},
+				//map: zombie_map,
+				//icon: 'hospital.png'
+			//});
+			console.log("41.051780 -76.251940 hospital.png");
+				zombie_map.addListener('click', function(e) {
+					var location = e.latLng;
+					place_marker(location);
+			});
+		}
+		
+		function place_marker(location){
+				var emoji = document.getElementById('icon_to_use').value;
+				var marker = new google.maps.Marker({
+					position: location,
+					map: zombie_map,
+					icon: emoji
+			});
+			console.log(location.lat() + " " + location.lng() + " " + emoji);
+		}
+	</script>
+    Items I want to appear on my page will go here
+	<script async defer
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNdg2Fxb3OYfUgv8-ObOqVwdQ711Kkqlw&callback=initMap">
+</script>
+</body>
+</html>
